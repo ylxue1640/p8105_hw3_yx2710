@@ -17,4 +17,14 @@ data("instacart")
 Short description of the instacart dataset:
 The instacart dataset has `r nrow(instacart)` rows and `r ncol(instacart)` columns. The variables that the instacart dataset contain are `r names(instacart)`
 
+* "reordered": 1 means this product has been ordered by this user before, 0 otherwise.
+
+* "eval_set":  which evaluation set this order is included (Note that eval_set of this dataset is exclusively from the “train”)
+
+* "order_dow": the day of the week on which the order was placed
+
+* "aisle": the name of the aisle
+
+* "department": the name of the department
+
 
