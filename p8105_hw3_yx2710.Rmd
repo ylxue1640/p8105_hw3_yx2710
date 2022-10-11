@@ -52,6 +52,22 @@ instacart %>%
 ```
 A: The plot is shown here and this plot also shows the answer that fresh vegetables are the most items ordered from.
 
+Q:Make a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”. Include the number of times each item is ordered in your table.
+```{r}
+instacart %>% 
+  filter(aisle == c("baking ingredients", "dog food care", "packaged vegetables fruits")) %>% 
+  group_by(aisle, product_name) %>% 
+  summarise(count = n()) %>% 
+  top_n(3, count) %>% 
+  knitr::kable()
+```
+
+A: The table is shown here.
+
+
+
+
+
 
 
 
