@@ -1,0 +1,20 @@
+---
+title: "p8105_hw3_yx2710"
+output: github_document
+---
+
+```{r setup}
+library(tidyverse)
+library(p8105.datasets)
+```
+
+Problem 1 
+
+```{r} 
+data("instacart")
+```
+
+Short description of the instacart dataset:
+The instacart dataset has `r nrow(instacart)` rows and `r ncol(instacart)` columns. The variables that the instacart dataset contain are `r names(instacart)`
+
+
