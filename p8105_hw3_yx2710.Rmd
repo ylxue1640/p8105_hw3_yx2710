@@ -27,4 +27,33 @@ The instacart dataset has `r nrow(instacart)` rows and `r ncol(instacart)` colum
 
 * "department": the name of the department
 
+Q:How many aisles are there, and which aisles are the most items ordered from?
+```{r}
+instacart %>% 
+  count(aisle, name = "n") %>% 
+  arrange(-n)
+```
+A: There are 134 aisles and fresh vegetables are the most items ordered from.
+
+Q: Make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered. Arrange aisles sensibly, and organize your plot so others can read it.
+```{r}
+instacart %>% 
+  count(aisle, name = "n") %>%
+  filter(n > 10000) %>% 
+  mutate(aisle = fct_reorder(aisle, n, .desc = TRUE)) %>% 
+  ggplot(aes(x = aisle, y = n)) + geom_point() +
+  labs(
+    title = "Number of items ordered in each aisle",
+    x = "Aisle",
+    y = "Number of items ordered",
+    caption = "Oder number larger than 10,000"
+  )+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+```
+A: The plot is shown here and this plot also shows the answer that fresh vegetables are the most items ordered from.
+
+
+
+
+
 
