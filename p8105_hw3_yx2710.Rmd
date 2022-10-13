@@ -78,7 +78,15 @@ instacart %>%
 ```
 A: The table is shown here.
 
+Problem 2 
 
+```{r}
+accel_df = read_csv("./data/accel_data.csv") %>% 
+  janitor::clean_names() %>% 
+  mutate(week_d = ifelse(day %in% c("Saturday", "Sunday"), "Weekend", "Weekday")) %>% 
+  select(week, day_id, day, week_d, everything())
+```
+The `r ncol(accel_df)` variables that dataset contains are week, day_id, day, week_d,and 1440 activity counts for each minute of a 24-hour day starting at midnight and there are `r nrow(accel_df)` observations.
 
 
 
