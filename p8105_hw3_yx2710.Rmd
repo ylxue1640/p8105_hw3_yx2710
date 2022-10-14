@@ -6,6 +6,8 @@ output: github_document
 ```{r setup}
 library(tidyverse)
 library(p8105.datasets)
+library(patchwork)
+library(hexbin)
 ```
 
 Problem 1 
@@ -167,7 +169,7 @@ From snow, the most commonly observed value is 0, which means most days in NY do
 Make a two-panel plot
 
 ```{r}
-ny_noaa_c %>% 
+Two_panel_plot = ny_noaa_c %>% 
   filter(month %in% c("01","07")) %>% 
   group_by(id, year, month) %>% 
   summarize(mean_tmax = mean(tmax, na.rm = TRUE)) %>% 
@@ -180,14 +182,35 @@ ny_noaa_c %>%
   xlab("Year") +
   ylab("Average max temperature")
   
+Two_panel_plot
 ```
 
 From the plot, we can figure out that most of average max temperatures of January locate between -10 degrees C to 10 degrees C, and most of average max temperatures of July concentrate between 20 degrees C and 40 degrees C.
 There are some outliers, such as in 1982 and 2005, the mean_tmax is lower than -10 degree C in Jan and in July of 1988, the mean_tmax is lower than 20 degrees C.
 
+Make a two-panel plot showing 
 
+(i) tmax vs tmin for the full dataset
 
+(ii) make a plot showing the distribution of snowfall values greater than 0 and less than 100 separately by year.
+```{r}
+t_t_plot = ny_noaa_c %>% 
+  ggplot(aes(x = tmin, y = tmax)) + 
+  geom_hex() +
+  scale_fill_viridis_c() +
+  xlab("Minimum temperature ") +
+  ylab("Maximum temperature")
 
+snow_plot = ny_noaa_c %>% 
+  filter(snow > 0 & snow < 100) %>% 
+  ggplot(aes(x = year, y = snow)) +
+  geom_boxplot(fill="slateblue", alpha=0.2) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))+
+  xlab("Year") +
+  ylab("Snowfall(mm)")
+
+t_t_plot + snow_plot
+```
 
 
 
