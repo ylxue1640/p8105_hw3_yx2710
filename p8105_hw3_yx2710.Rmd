@@ -131,5 +131,64 @@ accel_df %>%
 ```
 The plot tells us that most activities happened between 8am-12pm and 8pm-12am.Also, most activity counts are less than 2500.
 
+Problem 3
+
+```{r}
+library(p8105.datasets)
+data("ny_noaa")
+```
+
+The dataset has `r ncol(ny_noaa)` columns and `r nrow(ny_noaa)` rows. The variables this dataset contains are `r names(ny_noaa)`.
+Key variables in ny_noaa:
+* prcp: Precipitation (tenths of mm)
+* snow: Snowfall (mm)
+* snwd: Snow depth (mm)
+* tmax: Maximum temperature (tenths of degrees C)
+* tmin: Minimum temperature (tenths of degrees C)
+
+The proportion of NA in this dataset is `r sum(is.na(ny_noaa))/(5*nrow(ny_noaa))`` and I think it is somewhat severe.
+
+```{r}
+ny_noaa_c = ny_noaa %>% 
+  separate(date, into = c("year", "month", "day"), sep="-", remove = TRUE) %>% 
+   mutate(
+    prcp = prcp/10,
+    tmax = as.numeric(tmax)/10,
+    tmin = as.numeric(tmin)/10
+    ) 
+
+ny_noaa_c%>% 
+  group_by(snow) %>% 
+  summarise(snow_n = n()) %>% 
+  arrange(-snow_n)
+```
+From snow, the most commonly observed value is 0, which means most days in NY do not snow.
+
+Make a two-panel plot
+
+```{r}
+ny_noaa_c %>% 
+  filter(month %in% c("01","07")) %>% 
+  group_by(id, year, month) %>% 
+  summarize(mean_tmax = mean(tmax, na.rm = TRUE)) %>% 
+  drop_na() %>% 
+  ggplot(aes(x = year, y = mean_tmax))+
+  geom_point(alpha = .2)+
+  geom_smooth()+
+  facet_grid(. ~ month)+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))+
+  xlab("Year") +
+  ylab("Average max temperature")
+  
+```
+
+From the plot, we can figure out that most of average max temperatures of January locate between -10 degrees C to 10 degrees C, and most of average max temperatures of July concentrate between 20 degrees C and 40 degrees C.
+There are some outliers, such as in 1982 and 2005, the mean_tmax is lower than -10 degree C in Jan and in July of 1988, the mean_tmax is lower than 20 degrees C.
+
+
+
+
+
+
 
 
