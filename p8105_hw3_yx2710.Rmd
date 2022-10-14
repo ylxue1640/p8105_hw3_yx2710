@@ -84,12 +84,52 @@ Problem 2
 accel_df = read_csv("./data/accel_data.csv") %>% 
   janitor::clean_names() %>% 
   mutate(week_d = ifelse(day %in% c("Saturday", "Sunday"), "Weekend", "Weekday")) %>% 
-  select(week, day_id, day, week_d, everything())
+  pivot_longer(
+    activity_1:activity_1440,
+    names_to = "minute",
+    names_prefix = "activity_",
+    values_to = "activity_count"
+  ) %>% 
+  select(week, day_id, day, week_d, everything()) %>% 
+  mutate(
+    day = factor(day),
+    minute = as.numeric(minute)
+  )
 ```
-The `r ncol(accel_df)` variables that dataset contains are week, day_id, day, week_d,and 1440 activity counts for each minute of a 24-hour day starting at midnight and there are `r nrow(accel_df)` observations.
+The `r ncol(accel_df)` variables that dataset contains are `r names(accel_df)` and there are `r nrow(accel_df)` observations.
 
 
+Create a total activity variable for each day, and create a table showing these totals. 
+```{r}
+accel_df %>% 
+  mutate(day = forcats::fct_relevel(day, c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))) %>% 
+  group_by(day) %>% 
+  summarize(total_activity = sum(activity_count)) %>% 
+  knitr::kable()
 
+```
+There is no apparent trend.
+
+24-hour activity time courses for each day 
+```{r}
+accel_df %>% 
+  mutate(day = forcats::fct_relevel(day, c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))) %>% 
+  ggplot(aes(x = minute, y = activity_count, color = day)) +
+  geom_point(alpha = 0.3) +
+  labs(
+    x = "Minutes",
+    y = "Activity Count"
+  )+
+  scale_x_continuous(
+    breaks = c(0, 240, 480, 720, 960, 1200, 1440),
+    labels = c("0", "4am", "8am", "12pm", "4pm", "8pm", "12am")
+  )+ geom_smooth(se = FALSE)+
+    viridis::scale_color_viridis(
+    name = "Day", 
+    discrete = TRUE
+  )
+```
+The plot tells us that most activities happened between 8am-12pm and 8pm-12am.Also, most activity counts are less than 2500.
 
 
 
