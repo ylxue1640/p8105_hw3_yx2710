@@ -209,7 +209,7 @@ snow_plot = ny_noaa_c %>%
   xlab("Year") +
   ylab("Snowfall(mm)")
 
-t_t_plot + snow_plot
+t_t_plot + snow_plot 
 ```
 
 
